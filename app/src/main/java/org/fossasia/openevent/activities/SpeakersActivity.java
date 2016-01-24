@@ -1,5 +1,6 @@
 package org.fossasia.openevent.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,11 +13,14 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.fossasia.openevent.R;
 import org.fossasia.openevent.adapters.SessionsListAdapter;
 import org.fossasia.openevent.data.Session;
 import org.fossasia.openevent.data.Speaker;
 import org.fossasia.openevent.dbutils.DbSingleton;
+import org.fossasia.openevent.utils.CircleTransform;
 import org.fossasia.openevent.utils.SpeakerIntent;
 
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ public class SpeakersActivity extends AppCompatActivity implements SearchView.On
     private List<Session> mSessions;
     private RecyclerView sessionRecyclerView;
     private String speaker;
+    private ImageView mSpeakerImage;
+    private TextView mSpeakerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,12 @@ public class SpeakersActivity extends AppCompatActivity implements SearchView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         selectedSpeaker = dbSingleton.getSpeakerbySpeakersname(speaker);
+        mSpeakerImage = (ImageView) findViewById(R.id.speaker_image);
+        mSpeakerName = (TextView) findViewById(R.id.speaker_name);
+
+        Uri uri = Uri.parse(selectedSpeaker.getPhoto());
+        Picasso.with(mSpeakerImage.getContext()).load(uri).transform(new CircleTransform()).into(mSpeakerImage);
+        mSpeakerName.setText(selectedSpeaker.getName());
 
 
         TextView biography = (TextView) findViewById(R.id.speaker_bio);
